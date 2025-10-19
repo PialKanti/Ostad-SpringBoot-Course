@@ -1,15 +1,16 @@
 package com.example.crud_sample.service;
 
 import com.example.crud_sample.model.entity.User;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-@Component
+@Service
 public class UserService {
-    private Map<Long, User> users;
+    private final Map<Long, User> users;
 
     public UserService() {
         this.users = new HashMap<>();
@@ -19,8 +20,12 @@ public class UserService {
         return users.values().stream().toList();
     }
 
-    public User getById(Long id) {
-        return users.get(id);
+    public Optional<User> getById(Long id) {
+        if(!users.containsKey(id)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(users.get(id));
     }
 
     public User create(User user) {
