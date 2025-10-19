@@ -1,6 +1,7 @@
 package com.example.crud_sample.controller;
 
 import com.example.crud_sample.dto.request.UserCreateRequest;
+import com.example.crud_sample.dto.request.UserUpdateRequest;
 import com.example.crud_sample.mapper.UserMapper;
 import com.example.crud_sample.model.entity.User;
 import com.example.crud_sample.service.UserService;
@@ -51,6 +52,21 @@ public class UserController {
                 .status(HttpStatus.CREATED)
                 .location(location)
                 .body(savedUser);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateUser(@PathVariable Long id,
+                                           @Valid @RequestBody UserUpdateRequest updateRequest) {
+        Optional<User> userOptional = userService.getById(id);
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User existingUser = userOptional.get();
+        User userToBeUpdated = userMapper.toEntity(existingUser, updateRequest);
+        userService.save(userToBeUpdated);
+
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping

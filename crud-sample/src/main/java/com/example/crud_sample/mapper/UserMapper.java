@@ -1,6 +1,7 @@
 package com.example.crud_sample.mapper;
 
 import com.example.crud_sample.dto.request.UserCreateRequest;
+import com.example.crud_sample.dto.request.UserUpdateRequest;
 import com.example.crud_sample.model.entity.User;
 import org.springframework.stereotype.Component;
 
@@ -15,5 +16,12 @@ public class UserMapper {
         user.setUsername(request.username());
 
         return user;
+    }
+
+    public User toEntity(User existingUser, UserUpdateRequest request) {
+        existingUser.setFirstName(request.firstName());
+        existingUser.setLastName(request.lastName());
+
+        return existingUser;
     }
 }

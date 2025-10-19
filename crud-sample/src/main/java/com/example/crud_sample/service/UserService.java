@@ -21,7 +21,7 @@ public class UserService {
     }
 
     public Optional<User> getById(Long id) {
-        if(!users.containsKey(id)) {
+        if (!users.containsKey(id)) {
             return Optional.empty();
         }
 
@@ -30,8 +30,12 @@ public class UserService {
 
     public User create(User user) {
         user.setId((long) (users.size() + 1));
-        users.put(user.getId(), user);
+        save(user);
 
         return user;
+    }
+
+    public void save(User user) {
+        users.put(user.getId(), user);
     }
 }
