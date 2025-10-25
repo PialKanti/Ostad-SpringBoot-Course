@@ -1,9 +1,13 @@
 package com.example.crud_sample.controller;
 
+import com.example.crud_sample.dto.request.PostCreateRequest;
 import com.example.crud_sample.dto.request.UserCreateRequest;
 import com.example.crud_sample.dto.request.UserUpdateRequest;
+import com.example.crud_sample.mapper.PostMapper;
 import com.example.crud_sample.mapper.UserMapper;
+import com.example.crud_sample.model.entity.Post;
 import com.example.crud_sample.model.entity.User;
+import com.example.crud_sample.service.PostService;
 import com.example.crud_sample.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +28,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final PostService postService;
     private final UserMapper userMapper;
+    private final PostMapper postMapper;
 
     @PostMapping
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserCreateRequest request,
@@ -96,4 +102,41 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/{userId}/posts")
+    public ResponseEntity<Post> createPost(@PathVariable Long userId,
+                                           @Valid @RequestBody PostCreateRequest request) {
+        Post post = postMapper.toEntity(request);
+
+        Post savedPost = postService.createPostForUser(userId, post);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(post.getId())
+                .toUri();
+
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .location(location)
+                .body(savedPost);
+    }
+
+    @GetMapping("/{userId}/posts")
+    public ResponseEntity<List<Post>> getPosts(@PathVariable Long userId) {
+        List<Post> posts = postService.getPostsByUser(userId);
+        return ResponseEntity.ok(posts);
+    }
+
+    @DeleteMapping("/{userId}/posts/{postId}")
+    public ResponseEntity<Void> deletePostOfUser(@PathVariable Long userId,
+                                                 @PathVariable Long postId) {
+        boolean deleted = postService.deletePostForUser(userId, postId);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
