@@ -12,5 +12,7 @@ public record UserCreateRequest(
         String lastName,
 
         String email,
-        String username
+        String username,
+
+        ProfileCreateRequest profile
 ) {}

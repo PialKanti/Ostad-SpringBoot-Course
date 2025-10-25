@@ -2,6 +2,7 @@ package com.example.crud_sample.mapper;
 
 import com.example.crud_sample.dto.request.UserCreateRequest;
 import com.example.crud_sample.dto.request.UserUpdateRequest;
+import com.example.crud_sample.model.entity.Profile;
 import com.example.crud_sample.model.entity.User;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,16 @@ public class UserMapper {
         user.setLastName(request.lastName());
         user.setEmail(request.email());
         user.setUsername(request.username());
+
+        if(request.profile() != null) {
+            Profile profile = new Profile();
+            profile.setBio(request.profile().bio());
+            profile.setPhoneNumber(request.profile().phoneNumber());
+            profile.setGender(request.profile().gender());
+            profile.setUser(user);
+
+            user.setProfile(profile);
+        }
 
         return user;
     }

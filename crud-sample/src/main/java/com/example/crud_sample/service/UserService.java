@@ -32,4 +32,13 @@ public class UserService {
     public void save(User user) {
         userRepository.save(user);
     }
+
+    public boolean deleteById(Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            userRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }
