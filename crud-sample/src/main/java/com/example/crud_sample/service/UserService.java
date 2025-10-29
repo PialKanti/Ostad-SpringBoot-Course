@@ -18,10 +18,6 @@ public class UserService {
     }
 
     public Optional<User> getById(Long id) {
-        if (!userRepository.existsById(id)) {
-            return Optional.empty();
-        }
-
         return userRepository.findById(id);
     }
 

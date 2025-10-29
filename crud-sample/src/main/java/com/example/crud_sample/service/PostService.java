@@ -1,6 +1,7 @@
 package com.example.crud_sample.service;
 
 import com.example.crud_sample.model.entity.Post;
+import com.example.crud_sample.model.entity.User;
 import com.example.crud_sample.repository.PostRepository;
 import com.example.crud_sample.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class PostService {
     private final UserRepository userRepository;
 
     public Post createPostForUser(Long userId, Post post) {
-        var user = userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         post.setUser(user);
         return postRepository.save(post);
