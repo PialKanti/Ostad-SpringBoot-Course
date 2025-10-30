@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -42,6 +43,14 @@ public class UserController {
                             Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)
                     )
             );
+        }
+
+        if (userService.existsByEmail(request.email())) {
+            return ResponseEntity.badRequest().body(Map.of("message", "email already exists"));
+        }
+
+        if (userService.existsByUsername(request.username())) {
+            return ResponseEntity.badRequest().body(Map.of("message", "username already exists"));
         }
 
         User user = userMapper.toEntity(request);
