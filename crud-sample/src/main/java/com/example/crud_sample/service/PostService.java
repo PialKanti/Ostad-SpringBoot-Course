@@ -7,6 +7,7 @@ import com.example.crud_sample.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,16 @@ public class PostService {
 
     public List<Post> getPostsByUser(Long userId) {
         return postRepository.findByUserId(userId);
+    }
+
+    public List<Post> getPostsOfTodayByUser(Long userId) {
+        LocalDate today = LocalDate.now();
+
+        return postRepository.findByUserIdAndCreatedDateBetween(
+                userId,
+                today.atStartOfDay(),
+                today.plusDays(1).atStartOfDay()
+        );
     }
 
     public boolean deletePostForUser(Long userId, Long postId) {

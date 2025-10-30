@@ -137,6 +137,13 @@ public class UserController {
         return ResponseEntity.ok(posts);
     }
 
+    @GetMapping("/{userId}/posts/today")
+    public ResponseEntity<List<Post>> getPostsOfToday(@PathVariable Long userId) {
+        List<Post> posts = postService.getPostsOfTodayByUser(userId);
+        return ResponseEntity.ok(posts);
+    }
+
+
     @DeleteMapping("/{userId}/posts/{postId}")
     public ResponseEntity<Void> deletePostOfUser(@PathVariable Long userId,
                                                  @PathVariable Long postId) {
