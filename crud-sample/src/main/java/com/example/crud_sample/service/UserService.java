@@ -50,14 +50,24 @@ public class UserService {
     }
 
     public List<User> search(UserSearchRequest request) {
-        Specification<User> spec = Specification.unrestricted();
+        Specification<User> specification = Specification.unrestricted();
 
-        if (request.firstName() != null) spec = spec.and(UserSpecification.hasFirstName(request.firstName()));
-        if (request.lastName() != null)  spec = spec.and(UserSpecification.hasLastName(request.lastName()));
-        if (request.username() != null)  spec = spec.and(UserSpecification.hasUsername(request.username()));
-        if (request.phoneNumber() != null) spec = spec.and(UserSpecification.hasPhoneNumber(request.phoneNumber()));
-        if (request.gender() != null) spec = spec.and(UserSpecification.hasGender(request.gender()));
+        if (request.firstName() != null) {
+            specification = specification.and(UserSpecification.hasFirstName(request.firstName()));
+        }
+        if (request.lastName() != null) {
+            specification = specification.and(UserSpecification.hasLastName(request.lastName()));
+        }
+        if (request.username() != null) {
+            specification = specification.and(UserSpecification.hasUsername(request.username()));
+        }
+        if (request.phoneNumber() != null) {
+            specification = specification.and(UserSpecification.hasPhoneNumber(request.phoneNumber()));
+        }
+        if (request.gender() != null) {
+            specification = specification.and(UserSpecification.hasGender(request.gender()));
+        }
 
-        return userRepository.findAll(spec);
+        return userRepository.findAll(specification);
     }
 }
