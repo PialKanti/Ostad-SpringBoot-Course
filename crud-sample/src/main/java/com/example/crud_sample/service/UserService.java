@@ -1,8 +1,11 @@
 package com.example.crud_sample.service;
 
+import com.example.crud_sample.dto.request.UserSearchRequest;
 import com.example.crud_sample.model.entity.User;
 import com.example.crud_sample.repository.UserRepository;
+import com.example.crud_sample.specification.UserSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,5 +47,17 @@ public class UserService {
 
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    public List<User> search(UserSearchRequest request) {
+        Specification<User> spec = Specification.unrestricted();
+
+        if (request.firstName() != null) spec = spec.and(UserSpecification.hasFirstName(request.firstName()));
+        if (request.lastName() != null)  spec = spec.and(UserSpecification.hasLastName(request.lastName()));
+        if (request.username() != null)  spec = spec.and(UserSpecification.hasUsername(request.username()));
+        if (request.phoneNumber() != null) spec = spec.and(UserSpecification.hasPhoneNumber(request.phoneNumber()));
+        if (request.gender() != null) spec = spec.and(UserSpecification.hasGender(request.gender()));
+
+        return userRepository.findAll(spec);
     }
 }

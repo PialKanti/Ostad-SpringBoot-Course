@@ -2,6 +2,7 @@ package com.example.crud_sample.controller;
 
 import com.example.crud_sample.dto.request.PostCreateRequest;
 import com.example.crud_sample.dto.request.UserCreateRequest;
+import com.example.crud_sample.dto.request.UserSearchRequest;
 import com.example.crud_sample.dto.request.UserUpdateRequest;
 import com.example.crud_sample.mapper.PostMapper;
 import com.example.crud_sample.mapper.UserMapper;
@@ -114,6 +115,11 @@ public class UserController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<User>> searchUsers(@ModelAttribute UserSearchRequest searchRequest) {
+        return ResponseEntity.ok(userService.search(searchRequest));
     }
 
     @PostMapping("/{userId}/posts")
