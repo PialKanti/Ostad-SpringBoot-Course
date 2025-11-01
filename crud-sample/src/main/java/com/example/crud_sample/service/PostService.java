@@ -5,6 +5,8 @@ import com.example.crud_sample.model.entity.User;
 import com.example.crud_sample.repository.PostRepository;
 import com.example.crud_sample.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,8 +26,8 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public List<Post> getPostsByUser(Long userId) {
-        return postRepository.findByUserId(userId);
+    public Page<Post> getPostsByUser(Long userId, Pageable pageable) {
+        return postRepository.findByUserId(userId, pageable);
     }
 
     public List<Post> getPostsOfTodayByUser(Long userId) {
