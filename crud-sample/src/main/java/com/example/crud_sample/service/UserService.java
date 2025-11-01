@@ -55,15 +55,19 @@ public class UserService {
         if (request.firstName() != null) {
             specification = specification.and(UserSpecification.hasFirstName(request.firstName()));
         }
+
         if (request.lastName() != null) {
             specification = specification.and(UserSpecification.hasLastName(request.lastName()));
         }
+
         if (request.username() != null) {
             specification = specification.and(UserSpecification.hasUsername(request.username()));
         }
+
         if (request.phoneNumber() != null) {
             specification = specification.and(UserSpecification.hasPhoneNumber(request.phoneNumber()));
         }
+
         if (request.gender() != null) {
             specification = specification.and(UserSpecification.hasGender(request.gender()));
         }
