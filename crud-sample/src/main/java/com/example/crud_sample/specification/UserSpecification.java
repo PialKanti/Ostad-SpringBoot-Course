@@ -30,7 +30,7 @@ public class UserSpecification {
     public static Specification<User> hasPhoneNumber(String phoneNumber) {
         return (root, query, cb) -> {
             Join<User, Profile> profileJoin = root.join("profile", JoinType.LEFT);
-            return cb.like(cb.lower(profileJoin.get("phoneNumber")), "%" + phoneNumber.toLowerCase() + "%");
+            return cb.like(profileJoin.get("phoneNumber"), "%" + phoneNumber + "%");
         };
     }
 
