@@ -1,10 +1,11 @@
 package com.example.crud_sample.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record UserCreateRequest(
-        @NotNull(message = "First Name can not be empty")
+        @NotBlank(message = "First Name can not be empty")
         @JsonProperty("first_name")
         String firstName,
 

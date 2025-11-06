@@ -18,8 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -27,7 +25,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -39,17 +36,7 @@ public class UserController {
     private final PostMapper postMapper;
 
     @PostMapping
-    public ResponseEntity<Object> createUser(@Valid @RequestBody UserCreateRequest request,
-                                             BindingResult bindingResult) {
-        // Bad code. We will replace it with Global Exception Handler
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(
-                    bindingResult.getFieldErrors().stream().collect(
-                            Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)
-                    )
-            );
-        }
-
+    public ResponseEntity<Object> createUser(@Valid @RequestBody UserCreateRequest request) {
         if (userService.existsByEmail(request.email())) {
             return ResponseEntity.badRequest().body(Map.of("message", "email already exists"));
         }
