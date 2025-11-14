@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ExceptionConstant {
     USER_NOT_FOUND("User not found. Please check your credentials."),
-    METHOD_ARGUMENT_NOT_VALID("One or more fields do not match the validation parameters");
+    METHOD_ARGUMENT_NOT_VALID("One or more fields do not match the validation parameters"),
+    JWT_TOKEN_EXPIRED("JWT token has expired. Please log in again."),;
 
     private final String message;
 }

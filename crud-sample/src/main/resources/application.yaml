@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
 
     show-sql: true
 
@@ -21,6 +21,14 @@ spring:
   mvc:
     problemdetails:
       enabled: true
+
+application:
+  # Jwt Configuration
+  jwt:
+    config:
+      encryption-key: 5heUCJxsTsaYyTE6+XB+tnpvdZkttNv5PBWHe9v9q73kGjDa2+UI2YQMWPj1Fpec
+      # Expiration in milliseconds
+      token-expiration: 600000 # 10 minutes
 
 logging:
   level:
