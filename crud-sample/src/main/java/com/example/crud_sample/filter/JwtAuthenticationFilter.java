@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final ObjectMapper objectMapper;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
@@ -69,6 +69,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             writeErrorMessageToResponse(response, JWT_TOKEN_EXPIRED.getMessage());
         } catch (UsernameNotFoundException _) {
             writeErrorMessageToResponse(response, USER_NOT_FOUND.getMessage());
+        } catch (Exception e) {
+            System.out.println("Exception in JwtAuthenticationFilter: " + e.getMessage());
         }
     }
 

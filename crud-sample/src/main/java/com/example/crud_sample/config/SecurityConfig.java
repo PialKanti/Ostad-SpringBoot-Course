@@ -1,8 +1,14 @@
 package com.example.crud_sample.config;
 
 import com.example.crud_sample.filter.JwtAuthenticationFilter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -17,8 +23,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.example.crud_sample.model.enums.ExceptionConstant.INVALID_JWT_TOKEN;
+
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
     private static final String[] WHITELIST_URLS = {
             "/error/**",
@@ -30,9 +39,10 @@ public class SecurityConfig {
             "/webjars/**",
             "/v3/api-docs/**",
             "/swagger-ui.html",
-            "/api/v1/auth/register",
-            "/api/v1/auth/login"
+            "/auth/register",
+            "/auth/login"
     };
+    private final ObjectMapper objectMapper;
 
     @Bean
     public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService,
@@ -67,7 +77,16 @@ public class SecurityConfig {
                         .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authenticationException) -> {
+                            HttpStatus status = HttpStatus.UNAUTHORIZED;
+
+                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write(objectMapper.writeValueAsString(ProblemDetail.forStatusAndDetail(status, INVALID_JWT_TOKEN.getMessage())));
+                        })
+                );
 
         return httpSecurity.build();
     }
