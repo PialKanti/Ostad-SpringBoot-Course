@@ -1,15 +1,14 @@
 package com.example.crud_sample.exception;
 
 import com.example.crud_sample.dto.response.ValidationErrorResponse;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,7 +28,8 @@ public class GlobalExceptionHandler {
                                 .build())
                 .toList();
 
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, METHOD_ARGUMENT_NOT_VALID.getMessage());
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
+                METHOD_ARGUMENT_NOT_VALID.getMessage());
         problemDetail.setProperty("errors", errors);
 
         return problemDetail;
@@ -39,5 +39,11 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ProblemDetail handleEntityNotFoundException(EntityNotFoundException e) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
+    }
+
+    @ExceptionHandler(value = {EntityExistsException.class})
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ProblemDetail handleEntityExistsException(EntityExistsException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());
     }
 }

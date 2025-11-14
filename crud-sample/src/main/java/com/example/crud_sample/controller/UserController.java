@@ -12,6 +12,7 @@ import com.example.crud_sample.service.PostService;
 import com.example.crud_sample.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
     private final UserService userService;
     private final PostService postService;
@@ -37,6 +39,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserCreateRequest request) {
+        log.info("Get user created request {}", request);
         if (userService.existsByEmail(request.email())) {
             return ResponseEntity.badRequest().body(Map.of("message", "email already exists"));
         }

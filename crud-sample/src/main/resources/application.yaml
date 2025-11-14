@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 
     show-sql: true
 
@@ -21,3 +21,7 @@ spring:
   mvc:
     problemdetails:
       enabled: true
+
+logging:
+  level:
+    com.example.crud_sample: INFO
