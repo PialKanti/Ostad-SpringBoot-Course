@@ -4,16 +4,22 @@ import com.example.crud_sample.dto.request.UserSearchRequest;
 import com.example.crud_sample.model.entity.User;
 import com.example.crud_sample.repository.UserRepository;
 import com.example.crud_sample.specification.UserSpecification;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.crud_sample.model.enums.ExceptionConstant.USER_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
     public List<User> getAll() {
@@ -73,5 +79,11 @@ public class UserService {
         }
 
         return userRepository.findAll(specification);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND.getMessage()));
     }
 }

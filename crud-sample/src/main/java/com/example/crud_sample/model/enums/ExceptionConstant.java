@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ExceptionConstant {
+    USER_NOT_FOUND("User not found. Please check your credentials."),
     METHOD_ARGUMENT_NOT_VALID("One or more fields do not match the validation parameters");
 
     private final String message;
