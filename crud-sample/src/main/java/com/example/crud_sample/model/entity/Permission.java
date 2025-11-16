@@ -2,8 +2,7 @@ package com.example.crud_sample.model.entity;
 
 import com.example.crud_sample.model.enums.PermissionType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -11,6 +10,9 @@ import java.util.Set;
 @Table(name = "permissions")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -2,15 +2,17 @@ package com.example.crud_sample.model.entity;
 
 import com.example.crud_sample.model.enums.RoleType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
 @Entity
-@Table(name = "permissions")
+@Table(name = "roles")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
