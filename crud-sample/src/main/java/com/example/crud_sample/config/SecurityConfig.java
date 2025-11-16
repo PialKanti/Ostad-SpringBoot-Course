@@ -1,6 +1,7 @@
 package com.example.crud_sample.config;
 
 import com.example.crud_sample.filter.JwtAuthenticationFilter;
+import com.example.crud_sample.model.enums.RoleType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -27,6 +29,7 @@ import static com.example.crud_sample.model.enums.ExceptionConstant.INVALID_JWT_
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
     private static final String[] WHITELIST_URLS = {
@@ -71,10 +74,10 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(WHITELIST_URLS)
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated())
+                        .requestMatchers(WHITELIST_URLS).permitAll()
+                        .requestMatchers("/users/*/posts/**").hasAnyRole(RoleType.ADMIN.name(), RoleType.MODERATOR.name(), RoleType.USER.name())
+                        .requestMatchers("/users/**").hasRole(RoleType.ADMIN.name())
+                        .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

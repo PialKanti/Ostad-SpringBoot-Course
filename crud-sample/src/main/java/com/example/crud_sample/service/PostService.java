@@ -48,4 +48,8 @@ public class PostService {
         }
         return false;
     }
+
+    public boolean isPostOwner(Long userId, Long postId) {
+        return postRepository.existsByIdAndUserId(userId, postId);
+    }
 }

@@ -19,4 +19,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
     );
+
+    Boolean existsByIdAndUserId(Long id, Long postId);
 }

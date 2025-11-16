@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -147,6 +148,9 @@ public class UserController {
     }
 
 
+    @PreAuthorize("@postService.isPostOwner(#userId, #postId)"
+            + "or hasRole('MODERATOR') "
+            + "or hasRole('ADMIN') ")
     @DeleteMapping("/{userId}/posts/{postId}")
     public ResponseEntity<Void> deletePostOfUser(@PathVariable Long userId,
                                                  @PathVariable Long postId) {
@@ -157,5 +161,4 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-
 }
