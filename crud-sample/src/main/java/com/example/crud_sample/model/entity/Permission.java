@@ -1,6 +1,7 @@
 package com.example.crud_sample.model.entity;
 
 import com.example.crud_sample.model.enums.PermissionType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,5 +26,6 @@ public class Permission {
     private PermissionType code;
 
     @ManyToMany(mappedBy = "permissions")
+    @JsonBackReference
     private Set<Role> roles;
 }

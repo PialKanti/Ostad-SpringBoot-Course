@@ -1,6 +1,7 @@
 package com.example.crud_sample.model.entity;
 
 import com.example.crud_sample.model.enums.RoleType;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,5 +32,6 @@ public class Role {
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
+    @JsonManagedReference
     private Set<Permission> permissions;
 }
