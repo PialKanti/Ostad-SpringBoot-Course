@@ -22,6 +22,7 @@ public class Permission {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "code", nullable = false, unique = true, length = 50)
     private PermissionType code;
 
