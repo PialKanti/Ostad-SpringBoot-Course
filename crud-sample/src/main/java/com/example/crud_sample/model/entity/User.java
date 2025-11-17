@@ -5,9 +5,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -16,6 +18,23 @@ import java.util.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@NamedEntityGraph(
+        name = "User.rolesWithPermissions",
+        attributeNodes = {
+                @NamedAttributeNode(
+                        value = "roles",
+                        subgraph = "Role.permissions"
+                ),
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "Role.permissions",
+                        attributeNodes = {
+                                @NamedAttributeNode("permissions")
+                        }
+                )
+        }
+)
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -54,6 +73,22 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        Set<GrantedAuthority> authorities = new HashSet<>();
+
+        if (roles == null) {
+            return authorities;
+        }
+
+        authorities.addAll(roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getCode().name()))
+                .collect(Collectors.toSet()));
+
+        authorities.addAll(roles.stream()
+                .filter(role -> role.getPermissions() != null)
+                .flatMap(role -> role.getPermissions().stream())
+                .map(permission -> new SimpleGrantedAuthority(permission.getCode().name()))
+                .collect(Collectors.toSet()));
+
+        return authorities;
     }
 }

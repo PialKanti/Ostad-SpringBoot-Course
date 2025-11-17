@@ -50,6 +50,10 @@ public class PostService {
     }
 
     public boolean isPostOwner(Long userId, Long postId) {
+        if(userId == null) {
+            return false;
+        }
+
         return postRepository.existsByIdAndUserId(userId, postId);
     }
 }

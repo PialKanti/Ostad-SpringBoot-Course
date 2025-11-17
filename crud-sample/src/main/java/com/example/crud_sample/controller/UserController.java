@@ -113,6 +113,9 @@ public class UserController {
         return ResponseEntity.ok(userService.search(searchRequest));
     }
 
+    @PreAuthorize("#userId.equals(T(com.example.crud_sample.util.SecurityUtil).getCurrentUserId()) "
+            + " or hasRole('MODERATOR') "
+            + " or hasRole('ADMIN')")
     @PostMapping("/{userId}/posts")
     public ResponseEntity<Post> createPost(@PathVariable Long userId,
                                            @Valid @RequestBody PostCreateRequest request) {
@@ -148,7 +151,7 @@ public class UserController {
     }
 
 
-    @PreAuthorize("@postService.isPostOwner(#userId, #postId)"
+    @PreAuthorize("@postService.isPostOwner(T(com.example.crud_sample.util.SecurityUtil).getCurrentUserId(), #postId)"
             + "or hasRole('MODERATOR') "
             + "or hasRole('ADMIN') ")
     @DeleteMapping("/{userId}/posts/{postId}")
