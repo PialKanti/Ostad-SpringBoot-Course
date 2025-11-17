@@ -20,6 +20,11 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class DatabaseSeeder implements ApplicationRunner {
+    private static final String ADMIN_USERNAME = "admin";
+    private static final String ADMIN_PASSWORD = "admin123";
+    private static final String MODERATOR_USERNAME = "moderator";
+    private static final String MODERATOR_PASSWORD = "admin123";
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
@@ -30,6 +35,7 @@ public class DatabaseSeeder implements ApplicationRunner {
         Map<PermissionType, Permission> permissionsByType = initializePermissions();
         Map<RoleType, Role> rolesByType = initializeRoles(permissionsByType);
         initializeAdminUser(rolesByType.get(RoleType.ADMIN));
+        initializeModeratorUser(rolesByType.get(RoleType.MODERATOR));
     }
 
     private Map<PermissionType, Permission> initializePermissions() {
@@ -78,14 +84,28 @@ public class DatabaseSeeder implements ApplicationRunner {
     }
 
     private void initializeAdminUser(Role adminRole) {
-        if (userRepository.findByUsername("admin").isEmpty()) {
+        if (userRepository.findByUsername(ADMIN_USERNAME).isEmpty()) {
             User admin = User.builder()
                     .firstName("Super")
                     .lastName("Admin")
-                    .email("admin@example.com")
-                    .username("admin")
-                    .password(passwordEncoder.encode("admin123"))
+                    .email("moderator@example.com")
+                    .username(ADMIN_USERNAME)
+                    .password(passwordEncoder.encode(ADMIN_PASSWORD))
                     .roles(Set.of(adminRole))
+                    .build();
+            userRepository.save(admin);
+        }
+    }
+
+    private void initializeModeratorUser(Role moderatorRole) {
+        if (userRepository.findByUsername(MODERATOR_USERNAME).isEmpty()) {
+            User admin = User.builder()
+                    .firstName("Moderator")
+                    .lastName("Admin")
+                    .email("admin@example.com")
+                    .username(MODERATOR_USERNAME)
+                    .password(passwordEncoder.encode(MODERATOR_PASSWORD))
+                    .roles(Set.of(moderatorRole))
                     .build();
             userRepository.save(admin);
         }
