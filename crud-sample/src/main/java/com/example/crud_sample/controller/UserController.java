@@ -135,6 +135,9 @@ public class UserController {
                 .body(savedPost);
     }
 
+    @PreAuthorize("#userId.equals(T(com.example.crud_sample.util.SecurityUtil).getCurrentUserId()) "
+            + " or hasRole('MODERATOR') "
+            + " or hasRole('ADMIN')")
     @GetMapping("/{userId}/posts")
     public ResponseEntity<Page<Post>> getPosts(@PathVariable Long userId,
                                                @RequestParam(value = "page", defaultValue = "0") Integer page,
