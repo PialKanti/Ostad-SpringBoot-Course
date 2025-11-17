@@ -147,6 +147,9 @@ public class UserController {
         return ResponseEntity.ok(posts);
     }
 
+    @PreAuthorize("#userId.equals(T(com.example.crud_sample.util.SecurityUtil).getCurrentUserId()) "
+            + " or hasRole('MODERATOR') "
+            + " or hasRole('ADMIN')")
     @GetMapping("/{userId}/posts/today")
     public ResponseEntity<List<Post>> getPostsOfToday(@PathVariable Long userId) {
         List<Post> posts = postService.getPostsOfTodayByUser(userId);
