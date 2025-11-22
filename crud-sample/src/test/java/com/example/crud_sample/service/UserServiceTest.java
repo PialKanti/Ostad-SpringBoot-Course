@@ -37,6 +37,37 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Should return user when ID exists")
+    void givenExistingId_whenGetById_thenReturnUser() {
+        // Given
+        Long userId = 1L;
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        // When
+        Optional<User> result = userService.getById(userId);
+
+        // Then
+        assertTrue(result.isPresent());
+        assertEquals(userId, result.get().getId());
+        verify(userRepository).findById(userId);
+    }
+
+    @Test
+    @DisplayName("Should return empty when ID does not exist")
+    void givenNonExistingId_whenGetById_thenReturnEmptyOptional() {
+        // Given
+        Long userId = 2L;
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        // When
+        Optional<User> result = userService.getById(userId);
+
+        // Then
+        assertFalse(result.isPresent());
+        verify(userRepository).findById(userId);
+    }
+
+    @Test
     @DisplayName("Should return UserDetails when username exists")
     void givenExistingUsername_whenLoadUserByUsername_thenReturnUserDetails() {
         // Given
