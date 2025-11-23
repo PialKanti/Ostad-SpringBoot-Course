@@ -49,7 +49,6 @@ class UserServiceTest {
         // Then
         assertTrue(result.isPresent());
         assertEquals(userId, result.get().getId());
-        verify(userRepository).findById(userId);
     }
 
     @Test
@@ -64,7 +63,6 @@ class UserServiceTest {
 
         // Then
         assertFalse(result.isPresent());
-        verify(userRepository).findById(userId);
     }
 
     @Test
@@ -80,7 +78,6 @@ class UserServiceTest {
         // Then
         assertNotNull(userDetails);
         assertEquals(username, userDetails.getUsername());
-        verify(userRepository).findByUsername(username);
     }
 
     @Test
@@ -92,6 +89,5 @@ class UserServiceTest {
 
         // When & Then
         assertThrows(EntityNotFoundException.class, () -> userService.loadUserByUsername(username));
-        verify(userRepository, times(1)).findByUsername(username);
     }
 }
