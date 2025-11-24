@@ -57,8 +57,7 @@ class UserControllerTest {
         when(userService.getById(1L)).thenReturn(Optional.of(user));
 
         // When & Then
-        mockMvc.perform(get("/users/1")
-                        .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/users/1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(1))

@@ -90,4 +90,20 @@ class UserServiceTest {
         // When & Then
         assertThrows(EntityNotFoundException.class, () -> userService.loadUserByUsername(username));
     }
+
+    @Test
+    @DisplayName("Should save and return created user")
+    void givenValidUser_whenCreate_thenReturnSavedUser() {
+        // Given
+        when(userRepository.save(user)).thenReturn(user);
+
+        // When
+        User savedUser = userService.create(user);
+
+        // Then
+        assertNotNull(savedUser);
+        assertEquals(user.getId(), savedUser.getId());
+        assertEquals("ironman", savedUser.getUsername());
+        verify(userRepository).save(user);
+    }
 }
